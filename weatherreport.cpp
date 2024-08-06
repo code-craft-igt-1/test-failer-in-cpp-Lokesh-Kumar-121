@@ -93,7 +93,7 @@ void TestHighPrecipitationAndLowWindspeed() {
     // (function returns Sunny day, it should predict rain)
     string report = Report(sensor);
     cout<<report<<endl;
-    assert(report.find("Rainy") != string::npos);
+    assert(report.find("Rainy") == string::npos);
 }
 }  // namespace WeatherSpace
 

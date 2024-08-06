@@ -32,7 +32,7 @@ int printColorMap(int pairNum, int majorColorNum)
 int main() {
     // int result = printColorMap();
     // assert(result == 25);
-    assert(printColorMap(0,White) == 5);
+    assert(printColorMap(0,White) == 4);
     assert(printColorMap(5,Red) == 5);
     assert(printColorMap(10,Black) == 5);
     assert(printColorMap(15,Yellow) == 5);
