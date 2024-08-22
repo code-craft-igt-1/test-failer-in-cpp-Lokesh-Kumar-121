@@ -33,7 +33,7 @@ class SensorStub : public IWeatherSensor {
     int Humidity() const override {
         return humidity_;
     }
-    
+
     int Precipitation() const override {
         return precipitation_;
     }
