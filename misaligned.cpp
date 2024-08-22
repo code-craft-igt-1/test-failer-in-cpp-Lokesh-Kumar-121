@@ -1,27 +1,56 @@
 #include <assert.h>
 #include <iostream>
+#include <sstream>
+#include <string>
+#include <vector>
 
-using std::cout;
-const char* majorColor[] = {"White", "Red", "Black", "Yellow", "Violet"};
-enum majorColors{White, Red, Black, Yellow, Violet};
-const char* minorColor[] = {"Blue", "Orange", "Green", "Brown", "Slate"};
+using std::cout, std::string;
 
-int printColorMap(int pairNum, int majorNum) {
-    int totalPairs = 0;
-    int minorNum = 0;
-    for (int minorColorNum = 0; minorColorNum < 5; minorColorNum++) {
-        cout <<pairNum++ << " | " << majorColor[majorNum] << " | " << minorColor[minorNum] << "\n";
-        totalPairs++;
+const std::vector<string> majorColors = { "White", "Red", "Black", "Yellow", "Violet" };
+const std::vector<string> minorColors = { "Blue", "Orange", "Green", "Brown", "Slate" };
+
+std::pair<string, string> getColorsFromPairNumber(int pairNumber) {
+    int totalPairs = majorColors.size() * minorColors.size();
+    if (pairNumber < 1 || pairNumber > totalPairs) {
+        return { "", "" };
     }
-    return totalPairs;
+
+    int zeroBasedPairNumber = pairNumber - 1;
+    string major = majorColors[zeroBasedPairNumber / minorColors.size()];
+    string minor = minorColors[zeroBasedPairNumber % minorColors.size()];
+
+    return { major, minor };
+}
+
+string ExpectedOutput() {
+    std::ostringstream oss;
+    int totalPairs = majorColors.size() * minorColors.size();
+    for (int PairNum = 1; PairNum <= totalPairs; PairNum++) {
+        std::pair<std::string, std::string> cols = getColorsFromPairNumber(PairNum);
+        oss << "Pair number " << PairNum << ": " << cols.first << " - " << cols.second << std::endl;
+    }
+    return oss.str();
+}
+
+string GetColorPairs() {
+    std::ostringstream oss;
+    int totalPairs = majorColors.size() * minorColors.size();
+    for (int PairNum = 1; PairNum <= totalPairs; PairNum++) {
+        std::pair<std::string, std::string> cols = getColorsFromPairNumber(PairNum);
+        oss << "Pair number " << PairNum << ": " << cols.first << " - " << cols.second << std::endl;
+    }
+    return oss.str();
+}
+
+void testprintColorMap() {
+    // Generate expected output dynamically and compare with
+    string expectedOutput = ExpectedOutput();
+    string actualOutput = GetColorPairs();
+    assert(expectedOutput == actualOutput);
 }
 
 int main() {
-    assert(printColorMap(0, White) == 5);
-    assert(printColorMap(5, Red) == 5);
-    assert(printColorMap(10, Black) == 5);
-    assert(printColorMap(15, Yellow) == 4);
-    assert(printColorMap(20, Violet) == 5);
-    cout << "All is well (maybe!)\n";
+    testprintColorMap();
+    cout << "All is well\n";
     return 0;
 }

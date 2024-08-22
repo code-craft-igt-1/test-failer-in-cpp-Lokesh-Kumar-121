@@ -19,38 +19,31 @@ class IWeatherSensor {
 /// without needing the actual Sensor during development
 
 class SensorStub : public IWeatherSensor {
-    int Humidity() const override {
-        return 72;
-    }
+ private:
+    int humidity_;
+    int precipitation_;
+    double temperature_;
+    int windSpeed_;
 
+ public:
+    SensorStub(int humidity, int precipitation, double temperature, int windSpeed)
+        : humidity_(humidity), precipitation_(precipitation),
+          temperature_(temperature), windSpeed_(windSpeed) {}
+
+    int Humidity() const override {
+        return humidity_;
+    }
+    
     int Precipitation() const override {
-        return 70;
+        return precipitation_;
     }
 
     double TemperatureInC() const override {
-        return 26;
+        return temperature_;
     }
 
     int WindSpeedKMPH() const override {
-        return 52;
-    }
-};
-
-class SensorStub2 : public IWeatherSensor {
-    int Humidity() const override {
-        return 72;
-    }
-
-    int Precipitation() const override {
-        return 70;
-    }
-
-    double TemperatureInC() const override {
-        return 26;
-    }
-
-    int WindSpeedKMPH() const override {
-        return 45;
+        return windSpeed_;
     }
 };
 
@@ -65,10 +58,10 @@ string Report(const IWeatherSensor& sensor) {
     if (sensor.TemperatureInC() > 25) {
         if (precipitation >= 20 && precipitation < 60)
             report = "Partly cloudy";
+        else if (precipitation >= 60)
+            report = "Rainy day";
         else if (sensor.WindSpeedKMPH() > 50)
             report = "Alert, Stormy with heavy rain";
-        else
-            report = "Rainy day";
     }
     return report;
 }
@@ -76,7 +69,7 @@ string Report(const IWeatherSensor& sensor) {
 // Test a rainy day
 
 void TestRainy() {
-    SensorStub sensor;
+    SensorStub sensor(72, 70, 26, 52);
     string report = Report(sensor);
     cout << report << endl;
     assert(report.find("Rainy") != string::npos);
@@ -87,7 +80,7 @@ void TestRainy() {
 void TestHighPrecipitationAndLowWindspeed() {
     // This instance of stub needs to be different-
     // to give high precipitation (>60) and low wind-speed (<50)
-    SensorStub2 sensor;
+    SensorStub sensor(72, 70, 26, 45);
 
     // strengthen the assert to expose the bug
     // (function returns Sunny day, it should predict rain)
